@@ -1,7 +1,8 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
+import { errorHandler } from "../utils/error.js";
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
    const { username, email, password } = req.body;
 
    if (
@@ -23,6 +24,6 @@ export const signup = async (req, res) => {
       await newUser.save();
       res.json("signup success");
    } catch (error) {
-      res.status(500).json({ messgae: error.message });
+      next(errorHandler(400, "All fields are required"));
    }
 };
