@@ -9,6 +9,8 @@ import SignUp from "./pages/SignUp";
 import Header from "./components/Header";
 import AppFooter from "./components/AppFooter";
 import PrivateRoute from "./components/PrivateRoute";
+import AdminRoute from "./components/AdminRoute";
+import CreatePost from "./pages/CreatePost";
 
 const App = () => {
    return (
@@ -21,6 +23,10 @@ const App = () => {
             <Route element={<PrivateRoute />}>
                <Route path="/dashboard" element={<Dashboard />} />
             </Route>
+            <Route element={<AdminRoute />}>
+               <Route path="/create-post" element={<CreatePost />} />
+            </Route>
+
             <Route path="/projects" element={<Projects />} />
             <Route path="/about" element={<About />} />
          </Routes>

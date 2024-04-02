@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, Button, Modal, Progress, TextInput } from "flowbite-react";
+import { Alert, Button, Modal, TextInput } from "flowbite-react";
 import { useDispatch, useSelector } from "react-redux";
 import {
    getStorage,
@@ -19,11 +19,11 @@ import {
    deleteUserFailure,
    signOutSuccess,
 } from "../redux/user/userSlice";
-
+import { Link } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
 const DashProfile = () => {
-   const { currentUser, error } = useSelector((state) => state.user);
+   const { currentUser, error, loading } = useSelector((state) => state.user);
 
    const [imageFile, setImageFile] = useState(null);
    const [imageUrl, setImageUrl] = useState(null);
@@ -236,9 +236,25 @@ const DashProfile = () => {
                placeholder="Password"
                onChange={handleChangeProfile}
             />
-            <Button type="submit" gradientDuoTone="purpleToBlue" outline>
-               Update
+            <Button
+               type="submit"
+               gradientDuoTone="purpleToBlue"
+               outline
+               disabled={loading || imgUploading}
+            >
+               {loading ? "Loading..." : "Update"}
             </Button>
+            {currentUser.isAdmin && (
+               <Link to="/create-post">
+                  <Button
+                     type="button"
+                     gradientDuoTone="purpleToPink"
+                     className="w-full"
+                  >
+                     Create a Post
+                  </Button>
+               </Link>
+            )}
          </form>
          <div className="text-red-500 flex justify-between mt-5">
             <span onClick={() => setShowModal(true)} className="cursor-pointer">
