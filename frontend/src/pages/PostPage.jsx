@@ -1,6 +1,7 @@
 import { Button, Spinner } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import CallToAction from "../components/CallToAction";
 
 const PostPage = () => {
    const { postSlug } = useParams();
@@ -80,6 +81,9 @@ const PostPage = () => {
                __html: postData && postData[0].content,
             }}
          ></div>
+         <div className="max-w-4xl mx-auto w-full">
+            <CallToAction />
+         </div>
       </main>
    );
 };
