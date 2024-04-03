@@ -7,8 +7,8 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 const DashPosts = () => {
    const { currentUser } = useSelector((state) => state.user);
 
-   const [posts, setPosts] = useState([]);
-   const [showMore, setShowMore] = useState(true);
+   const [postData, setPostData] = useState([]);
+   const [showMore, setShowMore] = useState(false);
    const [showModal, setShowModal] = useState(false);
    const [postIdDelete, setPostIdDelete] = useState("");
 
@@ -22,9 +22,9 @@ const DashPosts = () => {
             const data = await res.json();
 
             if (res.ok) {
-               setPosts(data.posts);
-               if (data.length < 9) {
-                  setShowMore(false);
+               setPostData(data.posts);
+               if (data.posts.length > 9) {
+                  setShowMore(true);
                }
             }
          } catch (error) {
@@ -38,7 +38,7 @@ const DashPosts = () => {
    }, [currentUser._id]);
 
    const handleShowMore = async () => {
-      const startIndex = posts.length;
+      const startIndex = postData.length;
 
       try {
          const res = await fetch(
@@ -46,7 +46,7 @@ const DashPosts = () => {
          );
          const data = await res.json();
          if (res.ok) {
-            setPosts((prev) => [...prev, ...data.posts]);
+            setPostData((prev) => [...prev, ...data.posts]);
             if (data.posts.length < 9) {
                setShowMore(false);
             }
@@ -71,7 +71,7 @@ const DashPosts = () => {
          if (!res.ok) {
             console.log(data.message);
          } else {
-            setPosts((prev) =>
+            setPostData((prev) =>
                prev.filter((newpost) => newpost._id !== postIdDelete)
             );
             setShowModal(false);
@@ -87,7 +87,7 @@ const DashPosts = () => {
        scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700
         dark:scrollbar-thumb-slate-500"
       >
-         {currentUser.isAdmin && posts.length > 0 ? (
+         {currentUser.isAdmin && postData.length > 0 ? (
             <>
                <Table hoverable className="shadow-md">
                   <Table.Head>
@@ -101,8 +101,8 @@ const DashPosts = () => {
                      </Table.HeadCell>
                   </Table.Head>
 
-                  {posts &&
-                     posts.map((post) => (
+                  {postData &&
+                     postData.map((post) => (
                         <Table.Body className="divide-y" key={post._id}>
                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                               <Table.Cell>
