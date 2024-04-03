@@ -52,29 +52,27 @@ const DashUsers = () => {
       }
    };
 
-   //    const handleDeleteUser = async () => {
-   //       setShowModal(false);
-   //       try {
-   //          const res = await fetch(
-   //             `/api/post/deleteuser/${postIdDelete}/${currentUser._id}`,
-   //             {
-   //                method: "DELETE",
-   //             }
-   //          );
+   const handleDeleteUser = async () => {
+      setShowModal(false);
+      try {
+         const res = await fetch(`/api/user/delete/${userIdDelete}`, {
+            method: "DELETE",
+         });
 
-   //          const data = await res.json();
+         const data = await res.json();
 
-   //          if (!res.ok) {
-   //             console.log(data.message);
-   //          } else {
-   //             setPosts((prev) =>
-   //                prev.filter((newpost) => newpost._id !== postIdDelete)
-   //             );
-   //          }
-   //       } catch (error) {
-   //          console.log(error);
-   //       }
-   //    };
+         if (!res.ok) {
+            console.log(data.message);
+         } else {
+            setUserData((prev) =>
+               prev.filter((newuser) => newuser._id !== userIdDelete)
+            );
+            setShowModal(false);
+         }
+      } catch (error) {
+         console.log(error);
+      }
+   };
 
    return (
       <div
@@ -158,7 +156,9 @@ const DashUsers = () => {
                      Are you sure, you want to delete this user?
                   </h3>
                   <div className="flex justify-center gap-4">
-                     <Button color="failure">Yes, I am sure</Button>
+                     <Button color="failure" onClick={handleDeleteUser}>
+                        Yes, I am sure
+                     </Button>
                      <Button color="gray" onClick={() => setShowModal(false)}>
                         Cancel
                      </Button>

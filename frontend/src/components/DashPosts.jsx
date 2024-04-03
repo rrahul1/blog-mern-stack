@@ -74,6 +74,7 @@ const DashPosts = () => {
             setPosts((prev) =>
                prev.filter((newpost) => newpost._id !== postIdDelete)
             );
+            setShowModal(false);
          }
       } catch (error) {
          console.log(error);
