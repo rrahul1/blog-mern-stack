@@ -5,7 +5,7 @@ const PostCard = ({ post }) => {
    return (
       <div
          className="group relative w-full border border-teal-500
-       h-[400px] overflow-hidden rounded-lg sm:w-[430px] hover:border-2 transition-all"
+       h-[400px] overflow-hidden rounded-lg sm:w-[350px] hover:border-2 transition-all"
       >
          <Link to={`/post/${post.slug}`}>
             <img
