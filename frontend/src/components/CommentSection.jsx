@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Alert, Button, TextInput } from "flowbite-react";
 import Comment from "./Comment";
 
@@ -9,6 +9,8 @@ const CommentSection = ({ postId }) => {
    const [comment, setComment] = useState("");
    const [error, setErrror] = useState(null);
    const [commentData, setCommentData] = useState([]);
+
+   const navigate = useNavigate();
 
    useEffect(() => {
       const getComments = async () => {
@@ -53,6 +55,36 @@ const CommentSection = ({ postId }) => {
          }
       } catch (error) {
          setErrror(error.message);
+      }
+   };
+
+   const handleLikes = async (commentId) => {
+      try {
+         if (!currentUser) {
+            navigate("/sign-in");
+            return;
+         }
+
+         const res = await fetch(`/api/comment/likecomment/${commentId}`, {
+            method: "PUT",
+         });
+
+         if (res.ok) {
+            const data = await res.json();
+            setCommentData(
+               commentData.map((comment) =>
+                  comment._id === commentId
+                     ? {
+                          ...comment,
+                          likes: data.likes,
+                          numberOfLikes: data.likes.length,
+                       }
+                     : comment
+               )
+            );
+         }
+      } catch (error) {
+         console.log(error);
       }
    };
 
@@ -115,12 +147,16 @@ const CommentSection = ({ postId }) => {
             <>
                <div className="text-sm my-5 flex items-center gap-1">
                   <p>Comments</p>
-                  <div className="border border-gray-400 py-1 px-2 rounded-sm">
+                  <div className="border border-gray-400 py-1 px-2 rounded-sm ">
                      <p>{commentData.length}</p>
                   </div>
                </div>
                {commentData.map((comment) => (
-                  <Comment key={comment._id} comment={comment} />
+                  <Comment
+                     key={comment._id}
+                     comment={comment}
+                     onLike={handleLikes}
+                  />
                ))}
             </>
          )}
