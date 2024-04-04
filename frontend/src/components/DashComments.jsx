@@ -2,26 +2,25 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Button, Modal, Table } from "flowbite-react";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { FaCheck, FaTimes } from "react-icons/fa";
 
-const DashUsers = () => {
+const DashComments = () => {
    const { currentUser } = useSelector((state) => state.user);
 
-   const [userData, setUserData] = useState([]);
+   const [commentData, setCommentData] = useState([]);
    const [showMore, setShowMore] = useState(true);
    const [showModal, setShowModal] = useState(false);
-   const [userIdDelete, setUserIdDelete] = useState("");
+   const [commentDelete, setCommentDelete] = useState("");
 
    useEffect(() => {
-      const fetchUsers = async () => {
+      const fetchComments = async () => {
          try {
-            const res = await fetch(`/api/user/getusers`);
+            const res = await fetch(`/api/comment/getcomments`);
 
             const data = await res.json();
 
             if (res.ok) {
-               setUserData(data.users);
-               if (data.users.length < 9) {
+               setCommentData(data.comments);
+               if (data.comments.length < 9) {
                   setShowMore(false);
                }
             }
@@ -31,19 +30,21 @@ const DashUsers = () => {
       };
 
       if (currentUser.isAdmin) {
-         fetchUsers();
+         fetchComments();
       }
    }, []);
 
    const handleShowMore = async () => {
-      const startIndex = userData.length;
+      const startIndex = commentData.length;
 
       try {
-         const res = await fetch(`/api/user/getusers?startIndex=${startIndex}`);
+         const res = await fetch(
+            `/api/comment/getcommets?startIndex=${startIndex}`
+         );
          const data = await res.json();
          if (res.ok) {
-            setUserData((prev) => [...prev, ...data.users]);
-            if (data.users.length < 9) {
+            setUserData((prev) => [...prev, ...data.comments]);
+            if (data.comments.length < 9) {
                setShowMore(false);
             }
          }
@@ -52,20 +53,23 @@ const DashUsers = () => {
       }
    };
 
-   const handleDeleteUser = async () => {
+   const handleDeleteComment = async () => {
       setShowModal(false);
       try {
-         const res = await fetch(`/api/user/delete/${userIdDelete}`, {
-            method: "DELETE",
-         });
+         const res = await fetch(
+            `/api/comment/deletecomment/${commentDelete}`,
+            {
+               method: "DELETE",
+            }
+         );
 
          const data = await res.json();
 
          if (!res.ok) {
             console.log(data.message);
          } else {
-            setUserData((prev) =>
-               prev.filter((newuser) => newuser._id !== userIdDelete)
+            setCommentData((prev) =>
+               prev.filter((newcomment) => newcomment._id !== commentDelete)
             );
             setShowModal(false);
          }
@@ -80,46 +84,40 @@ const DashUsers = () => {
        scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700
         dark:scrollbar-thumb-slate-500"
       >
-         {currentUser.isAdmin && userData.length > 0 ? (
+         {currentUser.isAdmin && commentData.length > 0 ? (
             <>
                <Table hoverable className="shadow-md">
                   <Table.Head>
-                     <Table.HeadCell>Date Created</Table.HeadCell>
-                     <Table.HeadCell>User Image</Table.HeadCell>
-                     <Table.HeadCell>Username</Table.HeadCell>
-                     <Table.HeadCell>Email</Table.HeadCell>
-                     <Table.HeadCell>Admin</Table.HeadCell>
+                     <Table.HeadCell>Date Updated</Table.HeadCell>
+                     <Table.HeadCell>Comment</Table.HeadCell>
+
+                     <Table.HeadCell>Number of Likes</Table.HeadCell>
+
+                     <Table.HeadCell>Post Id</Table.HeadCell>
+                     <Table.HeadCell>User Id</Table.HeadCell>
                      <Table.HeadCell>Delete</Table.HeadCell>
                   </Table.Head>
 
-                  {userData &&
-                     userData.map((user) => (
-                        <Table.Body className="divide-y" key={user._id}>
+                  {commentData &&
+                     commentData.map((comment) => (
+                        <Table.Body className="divide-y" key={comment._id}>
                            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                               <Table.Cell>
-                                 {new Date(user.createdAt).toLocaleDateString()}
+                                 {new Date(
+                                    comment.updatedAt
+                                 ).toLocaleDateString()}
                               </Table.Cell>
-                              <Table.Cell>
-                                 <img
-                                    src={user.profilePicture}
-                                    alt={user.username}
-                                    className="w-10 h-10 object-cover bg-gray-500 rounded-full"
-                                 />
-                              </Table.Cell>
-                              <Table.Cell>{user.username}</Table.Cell>
-                              <Table.Cell>{user.email}</Table.Cell>
-                              <Table.Cell>
-                                 {user.isAdmin ? (
-                                    <FaCheck className="text-green-500" />
-                                 ) : (
-                                    <FaTimes className="text-red-500" />
-                                 )}
-                              </Table.Cell>
+
+                              <Table.Cell>{comment.content}</Table.Cell>
+                              <Table.Cell>{comment.numberOfLikes}</Table.Cell>
+                              <Table.Cell>{comment.postId}</Table.Cell>
+                              <Table.Cell>{comment.userId}</Table.Cell>
+
                               <Table.Cell>
                                  <span
                                     onClick={() => {
                                        setShowModal(true);
-                                       setUserIdDelete(user._id);
+                                       setCommentDelete(comment._id);
                                     }}
                                     className="font-medium text-red-500 hover:underline cursor-pointer"
                                  >
@@ -140,7 +138,7 @@ const DashUsers = () => {
                )}
             </>
          ) : (
-            <p>You have no users yet.</p>
+            <p>You have no comments yet.</p>
          )}
          <Modal
             show={showModal}
@@ -153,10 +151,10 @@ const DashUsers = () => {
                <div className="text-center">
                   <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
                   <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-                     Are you sure, you want to delete this user?
+                     Are you sure, you want to delete this comment?
                   </h3>
                   <div className="flex justify-center gap-4">
-                     <Button color="failure" onClick={handleDeleteUser}>
+                     <Button color="failure" onClick={handleDeleteComment}>
                         Yes, I am sure
                      </Button>
                      <Button color="gray" onClick={() => setShowModal(false)}>
@@ -170,4 +168,4 @@ const DashUsers = () => {
    );
 };
 
-export default DashUsers;
+export default DashComments;
