@@ -10,6 +10,7 @@ import Header from "./components/Header";
 import AppFooter from "./components/AppFooter";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
+import ScrollToTop from "./components/ScrollToTop";
 import CreatePost from "./pages/CreatePost";
 import UpdatePost from "./pages/UpdatePost";
 import PostPage from "./pages/PostPage";
@@ -17,6 +18,7 @@ import PostPage from "./pages/PostPage";
 const App = () => {
    return (
       <BrowserRouter>
+         <ScrollToTop />
          <Header />
          <Routes>
             <Route path="/" element={<Home />} />
