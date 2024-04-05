@@ -2,9 +2,6 @@ import Post from "../models/post.model.js";
 import { errorHandler } from "../utils/error.js";
 
 export const createPost = async (req, res, next) => {
-   if (!req.user.isAdmin) {
-      return next(errorHandler(403, "You are not allowed to create a post."));
-   }
    if (!req.body.title || !req.body.content) {
       return next(errorHandler(400, "Please provide all required fields"));
    }
@@ -93,22 +90,15 @@ export const updatePost = async (req, res, next) => {
       return next(errorHandler(403, "You are not allowed to update this post"));
    }
 
-   const slug = req.body.title
-      .split(" ")
-      .join("-")
-      .toLowerCase()
-      .replace(/[^a-zA-Z0-9-]/g, "-");
-
    try {
       const updatedPost = await Post.findByIdAndUpdate(
          req.params.postId,
          {
             $set: {
-               title: req.body.title || "", // Default value provided
-               content: req.body.content || "", // Default value provided
-               category: req.body.category || "", // Default value provided
-               image: req.body.image || "", // Default value provided
-               slug: slug || "", // Default value provided
+               title: req.body.title || "",
+               content: req.body.content || "",
+               category: req.body.category || "",
+               image: req.body.image || "",
             },
          },
          {

@@ -5,10 +5,11 @@ import {
    HiArrowSmRight,
    HiChartPie,
    HiDocumentText,
+   HiNewspaper,
    HiOutlineUserGroup,
    HiUser,
 } from "react-icons/hi";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { signOutSuccess } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -17,6 +18,7 @@ const DashSidebar = () => {
 
    const location = useLocation();
    const dispatch = useDispatch();
+   const navigate = useNavigate();
 
    const [tab, setTab] = useState("");
 
@@ -39,6 +41,7 @@ const DashSidebar = () => {
             console.log(data.message);
          } else {
             dispatch(signOutSuccess());
+            navigate("/sign-in");
          }
       } catch (error) {
          console.log(error);
@@ -72,8 +75,13 @@ const DashSidebar = () => {
                         Profile
                      </Sidebar.Item>
                   </Link>
+                  <Link to="/create-post">
+                     <Sidebar.Item icon={HiNewspaper} as="div">
+                        Create Post
+                     </Sidebar.Item>
+                  </Link>
 
-                  {currentUser.isAdmin && (
+                  {currentUser && (
                      <Link to="/dashboard?tab=posts">
                         <Sidebar.Item
                            active={tab === "posts"}

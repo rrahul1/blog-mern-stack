@@ -32,7 +32,7 @@ const DashPosts = () => {
          }
       };
 
-      if (currentUser.isAdmin) {
+      if (currentUser) {
          fetchPosts();
       }
    }, [currentUser._id]);
@@ -87,7 +87,7 @@ const DashPosts = () => {
        scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700
         dark:scrollbar-thumb-slate-500"
       >
-         {currentUser.isAdmin && postData.length > 0 ? (
+         {currentUser && postData.length > 0 ? (
             <>
                <Table hoverable className="shadow-md">
                   <Table.Head>
@@ -95,10 +95,14 @@ const DashPosts = () => {
                      <Table.HeadCell>Post Image</Table.HeadCell>
                      <Table.HeadCell>Post Title</Table.HeadCell>
                      <Table.HeadCell>Category</Table.HeadCell>
-                     <Table.HeadCell>Delete</Table.HeadCell>
-                     <Table.HeadCell>
-                        <span>Edit</span>
-                     </Table.HeadCell>
+                     {currentUser.isAdmin && (
+                        <>
+                           <Table.HeadCell>Delete</Table.HeadCell>
+                           <Table.HeadCell>
+                              <span>Edit</span>
+                           </Table.HeadCell>
+                        </>
+                     )}
                   </Table.Head>
 
                   {postData &&
@@ -125,26 +129,34 @@ const DashPosts = () => {
                                     {post.title}
                                  </Link>
                               </Table.Cell>
-                              <Table.Cell>{post.category}</Table.Cell>
                               <Table.Cell>
-                                 <span
-                                    onClick={() => {
-                                       setShowModal(true);
-                                       setPostIdDelete(post._id);
-                                    }}
-                                    className="font-medium text-red-500 hover:underline cursor-pointer"
-                                 >
-                                    Delete
-                                 </span>
+                                 {post.category
+                                    ? post.category
+                                    : "Uncategorized"}
                               </Table.Cell>
-                              <Table.Cell>
-                                 <Link
-                                    className="text-teal-500 hover:underline"
-                                    to={`/update-post/${post._id}`}
-                                 >
-                                    <span>Edit</span>
-                                 </Link>
-                              </Table.Cell>
+                              {currentUser.isAdmin && (
+                                 <Table.Cell>
+                                    <span
+                                       onClick={() => {
+                                          setShowModal(true);
+                                          setPostIdDelete(post._id);
+                                       }}
+                                       className="font-medium text-red-500 hover:underline cursor-pointer"
+                                    >
+                                       Delete
+                                    </span>
+                                 </Table.Cell>
+                              )}
+                              {currentUser.isAdmin && (
+                                 <Table.Cell>
+                                    <Link
+                                       className="text-teal-500 hover:underline"
+                                       to={`/update-post/${post._id}`}
+                                    >
+                                       <span>Edit</span>
+                                    </Link>
+                                 </Table.Cell>
+                              )}
                            </Table.Row>
                         </Table.Body>
                      ))}

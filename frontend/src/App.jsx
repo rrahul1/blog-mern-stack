@@ -1,5 +1,6 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Projects from "./pages/Projects";
@@ -17,26 +18,42 @@ import PostPage from "./pages/PostPage";
 import Search from "./pages/Search";
 
 const App = () => {
+   const { currentUser } = useSelector((state) => state.user);
+
    return (
       <BrowserRouter>
          <ScrollToTop />
          <Header />
          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/sign-in" element={<SignIn />} />
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route element={<PrivateRoute />}>
-               <Route path="/dashboard" element={<Dashboard />} />
-            </Route>
-            <Route element={<AdminRoute />}>
-               <Route path="/create-post" element={<CreatePost />} />
-               <Route path="/update-post/:postId" element={<UpdatePost />} />
-            </Route>
+            {currentUser ? (
+               <>
+                  <Route path="/" element={<Home />} />
+                  <Route element={<PrivateRoute />}>
+                     <Route path="/dashboard" element={<Dashboard />} />
+                  </Route>
+                  <Route path="/create-post" element={<CreatePost />} />
+                  <Route element={<AdminRoute />}>
+                     <Route
+                        path="/update-post/:postId"
+                        element={<UpdatePost />}
+                     />
+                  </Route>
 
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/post/:postSlug" element={<PostPage />} />
-            <Route path="/search" element={<Search />} />
+                  <Route path="/projects" element={<Projects />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/post/:postSlug" element={<PostPage />} />
+                  <Route path="/search" element={<Search />} />
+                  <Route path="/sign-in" element={<Navigate to="/" />} />
+                  <Route path="/sign-up" element={<Navigate to="/" />} />
+               </>
+            ) : (
+               <>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/sign-in" element={<SignIn />} />
+                  <Route path="/sign-up" element={<SignUp />} />
+                  <Route path="*" element={<Navigate to="/sign-up" />} />
+               </>
+            )}
          </Routes>
          <AppFooter />
       </BrowserRouter>

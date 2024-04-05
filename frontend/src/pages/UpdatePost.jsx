@@ -131,15 +131,22 @@ const UpdatePost = () => {
                   id="title"
                   className="flex-1"
                   onChange={(e) =>
-                     setFormData({ ...formData, title: e.target.value })
+                     setFormData({
+                        ...formData,
+                        title: e.target.value,
+                     })
                   }
-                  value={formData.title || ""}
+                  value={formData.title}
                />
                <Select
+                  id="category"
                   onChange={(e) =>
-                     setFormData({ ...formData, category: e.target.value })
+                     setFormData({
+                        ...formData,
+                        category: e.target.value,
+                     })
                   }
-                  value={formData.category || ""}
+                  value={formData.category}
                >
                   <option value="uncategorized">Select a category</option>
                   <option value="javascript">Javascript</option>

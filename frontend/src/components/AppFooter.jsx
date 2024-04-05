@@ -20,7 +20,7 @@ const AppFooter = () => {
                      className="self-center whitespace-nowrap text-lg sm:text-xl font-semibold dark:text-white"
                   >
                      <span className="px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white">
-                        Rahul's
+                        Wish's
                      </span>
                      Blog
                   </Link>
@@ -41,7 +41,7 @@ const AppFooter = () => {
                            target="_blank"
                            rel="noopener noreferrer"
                         >
-                           Rahul's Blog
+                           Wish's Blog
                         </Footer.Link>
                      </Footer.LinkGroup>
                   </div>
@@ -73,7 +73,7 @@ const AppFooter = () => {
             <div className="w-full sm:flex sm:items-center sm:justify-between">
                <Footer.Copyright
                   href="#"
-                  by="Rahul's Blog"
+                  by="Wish's Blog"
                   year={new Date().getFullYear()}
                />
                <div className="flex gap-6 sm:mt0 mt-4 sm:justify-center">
